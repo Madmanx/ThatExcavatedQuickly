@@ -8,6 +8,6 @@ public class NetworkLobbyHook : LobbyHook
     public override void OnLobbyServerSceneLoadedForPlayer(NetworkManager manager, GameObject lobbyPlayer, GameObject gamePlayer)
     {
         LobbyPlayer lobby = lobbyPlayer.GetComponent<LobbyPlayer>();
-
+        gamePlayer.GetComponent<PlayerInfo>().Init(lobby.playerColor, lobby.playerName, lobby.playerControllerId);
     }
 }

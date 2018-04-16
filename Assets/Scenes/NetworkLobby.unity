@@ -3077,7 +3077,6 @@ MonoBehaviour:
   lobbyServerList: {fileID: 1406661170}
   lobbyPanel: {fileID: 840917950}
   ipInput: {fileID: 975216308}
-  matchNameInput: {fileID: 0}
 --- !u!1 &1400086658
 GameObject:
   m_ObjectHideFlags: 0
@@ -3561,13 +3560,13 @@ MonoBehaviour:
   m_MaxDelay: 0.01
   m_LogLevel: 2
   m_PlayerPrefab: {fileID: 0}
-  m_AutoCreatePlayer: 1
+  m_AutoCreatePlayer: 0
   m_PlayerSpawnMethod: 0
   m_OfflineScene: NetworkLobby
   m_OnlineScene: 
   m_SpawnPrefabs:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1036445469395682, guid: 82a264f5f3b3cd04f869767a9b60ffc6, type: 2}
+  - {fileID: 1100526464486808, guid: 961978a84ee70ae4c8792db8ffe6cfea, type: 2}
   - {fileID: 0}
   m_CustomConfig: 0
   m_MaxConnections: 4
@@ -3627,10 +3626,10 @@ MonoBehaviour:
   m_ShowLobbyGUI: 0
   m_MaxPlayers: 4
   m_MaxPlayersPerConnection: 1
-  m_MinPlayers: 2
+  m_MinPlayers: 1
   m_LobbyPlayerPrefab: {fileID: 11487034, guid: ad727d7e1462ecc4f83c898ecc501997,
     type: 2}
-  m_GamePlayerPrefab: {fileID: 1151084933099150, guid: d03647e7b68d2494daf89013b138b2a1,
+  m_GamePlayerPrefab: {fileID: 1517530547142604, guid: b6fc9d78238e0ea4abdb066c355d2584,
     type: 2}
   m_LobbyScene: NetworkLobby
   m_PlayScene: SampleScene

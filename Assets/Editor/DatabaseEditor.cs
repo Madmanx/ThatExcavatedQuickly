@@ -2,15 +2,15 @@
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(Database))]
+[CustomEditor(typeof(CharactersDatabase))]
 public class DatabaseEditor : Editor
 {
 
-    Database comp;
+    CharactersDatabase comp;
 
     public void OnEnable()
     {
-        comp = (Database)target;
+        comp = (CharactersDatabase)target;
     }
 
     public override void OnInspectorGUI()

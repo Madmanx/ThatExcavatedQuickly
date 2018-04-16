@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using Prototype.NetworkLobby;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class CameraController : MonoBehaviour {
     
@@ -9,6 +11,8 @@ public class CameraController : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        
+
         foreach (Cinemachine.CinemachineVirtualCamera camera in cameras)
         {
             if(currentCamera == -1)
@@ -16,13 +20,13 @@ public class CameraController : MonoBehaviour {
                 if (camera.gameObject.activeSelf)
                 {
                     camera.gameObject.SetActive(true);
-                    currentCamera = camera.transform.GetSiblingIndex() - 1;
+
+                    currentCamera = camera.transform.GetSiblingIndex();
                 }
             }
             else
                 camera.gameObject.SetActive(false);
         }
-     
 
     }
 	

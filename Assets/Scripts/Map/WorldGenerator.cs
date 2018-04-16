@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class WorldGenerator : MonoBehaviour {
 
+    public delegate void MapReady();
+    public static event MapReady OnMapReady;
+
+
     [SerializeField]
     GameObject WormTile;
 

@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Name: Data
   m_EditorClassIdentifier: 
   characters:
-  - name: Jean
-  - name: Bob
+  - name: Dweler
+    prefab: {fileID: 1036445469395682, guid: 82a264f5f3b3cd04f869767a9b60ffc6, type: 2}
+  - name: Gunner
+    prefab: {fileID: 1100526464486808, guid: 961978a84ee70ae4c8792db8ffe6cfea, type: 2}

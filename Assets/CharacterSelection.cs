@@ -20,17 +20,13 @@ public class CharacterSelection : MonoBehaviour {
     private int nbCharacters;
 
     private GameObject[] goCharactersToSelect;
+    //public List<CharacterData> AllCharacters;
     private List<CharacterData> AllCharacters;
 
     private void LoadCharacters()
     {
-
         AllCharacters = DatabaseManager.Instance.CharactersDb.Characters;
-
-
         nbCharacters = AllCharacters.Count;
-
-        Debug.Log(nbCharacters);
         goCharactersToSelect = new GameObject[nbCharacters];
         for (int iC = 0; iC < nbCharacters; iC++)
         {

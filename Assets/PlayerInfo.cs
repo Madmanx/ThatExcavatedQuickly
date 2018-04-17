@@ -12,6 +12,8 @@ public class PlayerInfo : NetworkBehaviour {
     
     private static PlayerInfo singleton;
 
+    private bool isReady = false;
+
     public void Awake()
     {
         singleton = this;
@@ -53,7 +55,9 @@ public class PlayerInfo : NetworkBehaviour {
     {
         #if UNITY_EDITOR
         Init(Color.blue, "Remi", 0);
-        #endif
+#endif
+
+        isReady = true;
     }
 
     public void Init(Color _selectedColor, string _selectedPlayerName, int _playerIndex)
@@ -61,18 +65,22 @@ public class PlayerInfo : NetworkBehaviour {
         playerColor = _selectedColor;
         playerName = _selectedPlayerName;
         playerIndex = _playerIndex;
-
-        Debug.Log(playerColor);
-        Debug.Log(playerName);
-        Debug.Log(playerIndex);
-        OnPlayerInfoReady();
     }
-        
+
+    public void Update()
+    {
+        if (isReady)
+        {
+            OnPlayerInfoReady();
+            isReady = false;
+        }
+    }
+
     [Command]
     public void Cmd_PlayerReady()
     {
         GameManager.Instance.isReady[playerIndex] = true;
     }
-     
+
 
 }

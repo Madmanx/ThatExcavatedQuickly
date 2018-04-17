@@ -24,9 +24,14 @@ public class CharacterSelection : MonoBehaviour {
 
     private void LoadCharacters()
     {
+
         AllCharacters = DatabaseManager.Instance.CharactersDb.Characters;
+
+
         nbCharacters = AllCharacters.Count;
-        goCharactersToSelect = new GameObject [nbCharacters];
+
+        Debug.Log(nbCharacters);
+        goCharactersToSelect = new GameObject[nbCharacters];
         for (int iC = 0; iC < nbCharacters; iC++)
         {
             CharacterData cd = AllCharacters[iC];
@@ -43,8 +48,9 @@ public class CharacterSelection : MonoBehaviour {
 
     public void Update()
     {
-        if(isReady)
-        {
+        if(isReady 
+           && GameManager.currentState == GameState.CharacterSelection)
+        {            
             if (Input.GetKeyDown(KeyCode.RightArrow))
             {
                 NextCharacter();
@@ -53,9 +59,13 @@ public class CharacterSelection : MonoBehaviour {
             {
                 PreviousCharacter();
             }
-            else if (Input.GetKeyDown(KeyCode.KeypadEnter) /*|| Input.GetKeyDown(KeyCode.*/)
+            else if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return)) // Enter
             {
                 AddSelectedCharacter(AllCharacters[currentSelectedCharacterIndex]);
+            }
+            else if (Input.GetKeyDown(KeyCode.Backspace))
+            {
+                RemoveLastSelectedCharacter();
             }
         }
            
@@ -63,12 +73,14 @@ public class CharacterSelection : MonoBehaviour {
 
     public void AddSelectedCharacter(CharacterData _characterData)
     {
-
-        // AIAIDIADIAJ
-        return;
-
-        GameManager.Instance.selectedCharacters[PlayerInfo.Instance.PlayerIndex].Add(_characterData);
+        CharactersManager.Instance.AddCharacter(_characterData);
     }
+
+    public void RemoveLastSelectedCharacter()
+    {
+        CharactersManager.Instance.RemoveCharacter();
+    }
+
 
     public void NextCharacter()
     {

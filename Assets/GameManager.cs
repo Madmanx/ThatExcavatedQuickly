@@ -1,14 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Prototype.NetworkLobby;
+﻿using UnityEngine;
+using UnityEngine.Networking;
 
-public class GameManager : MonoBehaviour {
+// Sync variable ? 
+public enum EntityTurn { Player1, Player2 }
 
-    public delegate void UIRefresh();
-    public static event UIRefresh OnUIRefresh;
+// My Turn
+public enum GameState { CharacterSelection, Ingame, Win, Lose }
 
-    public List<CharacterData>[] selectedCharacters;
+public class GameManager : NetworkBehaviour {
+
+    public static EntityTurn currentTurn;
+
+    public static GameState currentState = GameState.CharacterSelection;
+
+    public bool[] isReady = new bool[2];
+
+    public delegate void GameStateChange();
+    public static event GameStateChange OnGameStateChange;
+
     private static GameManager singleton;
 
     public static GameManager Instance
@@ -24,30 +33,48 @@ public class GameManager : MonoBehaviour {
         singleton = this;
     }
 
-    public void Start()
-    {
+    [ClientRpc]
+    public void RpcChangeTurn() { 
+        currentTurn = (currentTurn == EntityTurn.Player1) ? EntityTurn.Player2 : EntityTurn.Player1;
+        OnGameStateChange();
+    }
 
-        // DJAJDNJA
-        Debug.Log("test");
-#if UNITY_EDITOR
-        Debug.Log("test");
-        selectedCharacters = new List<CharacterData>[1];
-        #   else
-        Debug.Log(LobbyManager.singleton.numPlayers);
-        selectedCharacters = new List<CharacterData>[LobbyManager.singleton.numPlayers];
-        #endif
+    // RefForGameLoopOnly
+    // Change way to ? 
+    public GameObject refCharacterSelection;
+    public GameObject refIngame;
+
+    public void Update()
+    {
+        if (!isServer)
+            return;
+
+        if (isReady[0] && isReady[1])
+        {
+            RpcStartGame();
+        }
 
     }
 
-    public void AddCharacters(int PlayerIndex, CharacterData c)
-    {
-        if (selectedCharacters[PlayerIndex].Count > 2)
-            return;
+    //public void StartGame()
+    //{
+    //    if(isReady[0] && isReady[1])
+    //    {
+    //        RpcStartGame();
+    //    }
      
-        if (!selectedCharacters[PlayerIndex].Contains(c))
-            selectedCharacters[PlayerIndex].Add(c);
-        else
-            selectedCharacters[PlayerIndex].Remove(c);
-        OnUIRefresh();
+    //}
+
+    [ClientRpc]
+    public void RpcStartGame()
+    {
+        refCharacterSelection.SetActive(false);
+        refIngame.SetActive(true);
+
+        currentTurn = EntityTurn.Player1;
+        OnGameStateChange();
+
+        // ChangeGameStateFunction? 
+        currentState = GameState.Ingame;
     }
 }

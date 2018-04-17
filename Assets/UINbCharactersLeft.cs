@@ -8,17 +8,20 @@ public class UINbCharactersLeft : MonoBehaviour {
 
     void OnEnable()
     {
-        GameManager.OnUIRefresh += UpdateNbCharacter;
+        CharactersManager.OnCharactersRefresh += UpdateNbCharacter;
     }
 
 
     void OnDisable()
     {
-        GameManager.OnUIRefresh -= UpdateNbCharacter;
+        CharactersManager.OnCharactersRefresh -= UpdateNbCharacter;
     }
 
 
     void UpdateNbCharacter() {
-        GetComponent<Text>().text = "Choose " + (3 - GameManager.Instance.selectedCharacters[PlayerInfo.Instance.PlayerIndex].Count).ToString() + " Characters.";
+        if((3 - CharactersManager.Instance.currentCharacter) > 0)
+        GetComponent<Text>().text = "Choose " + (3 - CharactersManager.Instance.currentCharacter).ToString() + " characters";
+        else
+        GetComponent<Text>().text = "";
     }
 }

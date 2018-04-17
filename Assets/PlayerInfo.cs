@@ -1,10 +1,7 @@
-﻿using Prototype.NetworkLobby;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Networking;
 
-public class PlayerInfo : MonoBehaviour {
+public class PlayerInfo : NetworkBehaviour {
 
     public delegate void PlayerInfoReady();
     public static event PlayerInfoReady OnPlayerInfoReady;
@@ -64,9 +61,18 @@ public class PlayerInfo : MonoBehaviour {
         playerColor = _selectedColor;
         playerName = _selectedPlayerName;
         playerIndex = _playerIndex;
+
+        Debug.Log(playerColor);
+        Debug.Log(playerName);
+        Debug.Log(playerIndex);
         OnPlayerInfoReady();
     }
         
+    [Command]
+    public void Cmd_PlayerReady()
+    {
+        GameManager.Instance.isReady[playerIndex] = true;
+    }
      
 
 }

@@ -169,16 +169,16 @@ public class WorldGenerator : MonoBehaviour {
             switch (map[currentLayer, currentStreamingLine, i])
             {
                 case 0:
-                    Instantiate(EndTile, position, Quaternion.identity);
+                    Instantiate(EndTile, position, Quaternion.identity, transform);
                     break;
                 case 1:
-                    Instantiate(GroundTile, position, Quaternion.identity);
+                    Instantiate(GroundTile, position, Quaternion.identity, transform);
                     break;
                 case 2:
-                    Instantiate(GrassTile, position, Quaternion.identity);
+                    Instantiate(GrassTile, position, Quaternion.identity, transform);
                     break;
                 case 3:
-                    Instantiate(WormTile, position, Quaternion.identity);
+                    Instantiate(WormTile, position, Quaternion.identity, transform);
                     break;
                 default:
                     break;

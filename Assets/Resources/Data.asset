@@ -14,5 +14,7 @@ MonoBehaviour:
   characters:
   - name: Dweler
     prefab: {fileID: 1036445469395682, guid: 82a264f5f3b3cd04f869767a9b60ffc6, type: 2}
+    sprite: {fileID: 21300016, guid: af61a5adbac8efe469a835ba18f7aa82, type: 3}
   - name: Gunner
-    prefab: {fileID: 1100526464486808, guid: 961978a84ee70ae4c8792db8ffe6cfea, type: 2}
+    prefab: {fileID: 1036445469395682, guid: f3c8bd52da7315e46add6b9080b8409f, type: 2}
+    sprite: {fileID: 21300026, guid: af61a5adbac8efe469a835ba18f7aa82, type: 3}

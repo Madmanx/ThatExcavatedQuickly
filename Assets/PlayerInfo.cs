@@ -78,8 +78,7 @@ public class PlayerInfo : NetworkBehaviour {
         if (isServer)
             RegisterPlayerInfo();
 
-        if (hasAuthority)
-            this.name = playerName + (isServer ? "Server" : "Client");
+        this.name = playerName + (isServer ? "Server" : "Client");
     }
 
     // Will tell the server if the player is ready
@@ -101,37 +100,10 @@ public class PlayerInfo : NetworkBehaviour {
     // Only if also server
     public void RegisterPlayerInfo()
     {
-        if (isServer)
+        Debug.Log(isServer);
+
+        if (isServer && NetworkDispatcherManager.Instance)
             NetworkDispatcherManager.Instance.connectedPlayers.Add(this);
-    }
-
-    public void CopyCharactersSelectedToPossessedCharacters()
-    {
-
-        int[] ids = new int[CharactersManager.Instance.SelectedCharacters.Length];
-        for(int i = 0; i < ids.Length; i++)
-        {
-            ids[i] = DatabaseManager.Instance.CharactersDb.GetIdFromCharacterData(CharactersManager.Instance.SelectedCharacters[i]);
-        }
-
-        CmdCopyCharactersSelectedToPossessedCharacters(ids);
-    }
-
-
-    [Command]
-    public void CmdCopyCharactersSelectedToPossessedCharacters(int[] selectedCharacters)
-    {
-        for (int i = 0; i < selectedCharacters.Length; i++)
-        {
-            CharacterData cd = DatabaseManager.Instance.CharactersDb.GetCharacterDataFromId(selectedCharacters[i]);
-
-            GameObject go = Instantiate(cd.networkPrefab, transform.position, Quaternion.identity) as GameObject;
-            NetworkServer.SpawnWithClientAuthority(go, connectionToClient);
-
-            // Ref to characters controller
-            GetComponent<CharactersController>().possessedCharacters.Add(go);
-        }
-     
     }
 
 }

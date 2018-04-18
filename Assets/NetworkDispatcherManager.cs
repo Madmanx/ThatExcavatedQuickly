@@ -67,8 +67,8 @@ public class NetworkDispatcherManager : NetworkBehaviour {
     [ClientRpc]
     public void RpcSpawnPlayerCharacter()
     {
-        //NetworkSpawn
-        PlayerInfo.Instance.gameObject.AddComponent<CharactersController>();
+        // Where
+        CharactersController.Instance.Init();
     }
 
     [ClientRpc]

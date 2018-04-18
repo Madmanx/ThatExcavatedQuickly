@@ -66,12 +66,18 @@ public class CharactersController : NetworkBehaviour {
     }
     private void ControlNextCharacter()
     {
+        if (possessedCharacters.Count < currentPossessedCharacter + 1)
+            return;
+
         currentPossessedCharacter++;
         if (currentPossessedCharacter >= possessedCharacters.Count) currentPossessedCharacter = 0;
     }
 
     public void Shoot()
     {
+        if (possessedCharacters.Count < currentPossessedCharacter + 1)
+            return;
+
         possessedCharacters[currentPossessedCharacter].GetComponent<NetworkPawnController>().CmdDoFire();
     }
 

@@ -7,11 +7,6 @@ public class NetworkPawnController : NetworkBehaviour {
 
     public Weapon currentGun;
 
-    public void Start()
-    {
-        
-    }
-
     void Update()
     {
         if (!isLocalPlayer)
@@ -21,12 +16,21 @@ public class NetworkPawnController : NetworkBehaviour {
     [Command]
     public void CmdDoFire()
     {
-        // ... instantiate the rocket facing right and set it's velocity to the right. 
-        GameObject bulletInstance = Instantiate(currentGun.Ammo, transform.position, Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
-        bulletInstance.GetComponent<Rigidbody>().velocity = new Vector2(currentGun.speed, 0);
+        Vector3 dir;
+        if (currentGun.type == TypeOfWeapon.Gun)
+        {
+            dir = transform.forward;
+        } else
+        {
+            dir = (transform.forward + 2* Vector3.up).normalized;
+        }
+        GameObject bulletInstance = Instantiate(currentGun.Ammo, currentGun.transform.position, Quaternion.Euler(new Vector3(0, 0, 0))) as GameObject;
+        Physics.IgnoreCollision(bulletInstance.GetComponent<Collider>(), GetComponent<Collider>());
+        bulletInstance.GetComponent<Rigidbody>().velocity = dir * currentGun.speed;
         NetworkServer.Spawn(bulletInstance.gameObject);
         RpcDoFire();
     }
+
 
     [ClientRpc]
     public void RpcDoFire()

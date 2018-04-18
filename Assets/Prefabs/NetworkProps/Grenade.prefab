@@ -59,7 +59,7 @@ GameObject:
   - component: {fileID: 65827770608790620}
   - component: {fileID: 54469509115834272}
   m_Layer: 0
-  m_Name: Bullet
+  m_Name: Grenade
   m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -210,22 +210,22 @@ MonoBehaviour:
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 150
-    i1: 125
-    i2: 3
-    i3: 96
-    i4: 109
-    i5: 108
-    i6: 138
-    i7: 244
-    i8: 202
-    i9: 171
-    i10: 163
-    i11: 107
-    i12: 52
-    i13: 76
-    i14: 226
-    i15: 131
+    i0: 13
+    i1: 201
+    i2: 73
+    i3: 134
+    i4: 173
+    i5: 181
+    i6: 204
+    i7: 20
+    i8: 251
+    i9: 199
+    i10: 16
+    i11: 163
+    i12: 16
+    i13: 195
+    i14: 234
+    i15: 220
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
 --- !u!114 &114745115027345726

@@ -97,15 +97,8 @@ public class NetworkDispatcherManager : NetworkBehaviour {
         {
             for (int j = 0; j < 2; j++)
             {
-                int coord = Random.Range(0, 11);
-                if (coord < 10)
-                {
-                    coord += playerIndex;
-                }
-                else
-                {
-                    coord -= playerIndex;
-                }
+                int coord = Random.Range(1, 10);
+                coord += playerIndex;
                 pos[i, j] = coord;
             }
         }

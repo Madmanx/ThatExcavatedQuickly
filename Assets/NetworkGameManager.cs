@@ -7,6 +7,8 @@ public class NetworkGameManager : NetworkBehaviour {
 
     public bool[] isReady = new bool[2];
 
+    public SyncListBool test = new SyncListBool() { false, false };
+
     private static NetworkGameManager singleton;
 
     public static NetworkGameManager Instance
@@ -19,6 +21,8 @@ public class NetworkGameManager : NetworkBehaviour {
 
     public void Awake()
     {
+        test.Add(false);
+        test.Add(false);
         singleton = this;
     }
 
@@ -29,8 +33,9 @@ public class NetworkGameManager : NetworkBehaviour {
     }
 
 
-    public bool TryStartGame()
+    public bool TryStartGame(int playerIndex)
     {
+        Debug.Log(test[playerIndex]);
 
         // Here or catch on both button? 
         if (PlayerInfo.Instance.numPlayer == 2 && (isReady[0] && isReady[1])
@@ -43,6 +48,32 @@ public class NetworkGameManager : NetworkBehaviour {
             return true;
         }
         return false;
+    }
+
+    [Command]
+    public void CmdTryStartGame(int playerIndex)
+    {
+        isReady[playerIndex] = true;
+
+        // Here or catch on both button? 
+        if (PlayerInfo.Instance.numPlayer == 2 && (isReady[0] && isReady[1])
+            || PlayerInfo.Instance.numPlayer == 1 && (isReady[0]))
+        {
+            Debug.Log("startGameici");
+            RpcStartGame();
+
+        }
+    }
+
+
+    public override void OnStartLocalPlayer()
+    {
+        if(hasAuthority)
+        {
+            singleton = this;
+        }
+
+
     }
 
     public void Update()

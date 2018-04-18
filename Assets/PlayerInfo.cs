@@ -22,12 +22,16 @@ public class PlayerInfo : NetworkBehaviour {
     [SyncVar(hook = "OnReadyToBegin")]
     public bool readyToBegin = false;
 
-    private static PlayerInfo singleton;
+    public static PlayerInfo singleton;
 
-    public void Awake()
-    {
-        singleton = this;
-    }
+    //public void Awake()
+    //{
+
+    //    if (hasAuthority && singleton == null)
+    //        singleton = gameObject;
+    //    else if (hasAuthority)
+    //        Destroy(gameObject);
+    //}
 
     public static PlayerInfo Instance
     {
@@ -65,6 +69,11 @@ public class PlayerInfo : NetworkBehaviour {
     // After enable ? 
     public override void OnStartLocalPlayer()
     {
+        if (!hasAuthority)
+            return;
+
+        singleton = this;
+
         // Client
         if (readyToBegin)
             OnPlayerInfoReady();
@@ -74,22 +83,28 @@ public class PlayerInfo : NetworkBehaviour {
 
     public void Start()
     {
-        Debug.Log("IS server :" + isServer + " Or is CLient : " + isClient + " Or has Authority :" + hasAuthority);
-
         if(hasAuthority)
             this.name = playerName + (isServer ? "Server" : "Client");
     }
 
     // From player to server : global state
-
-    [Command]
-    public void Cmd_PlayerReady()
+    public void PlayerReady()
     {
         if (!hasAuthority)
             return;
 
         NetworkGameManager.Instance.isReady[playerIndex] = true;
-        NetworkGameManager.Instance.TryStartGame();
+        CmdPlayerReady();
+
+        NetworkGameManager.Instance.CmdTryStartGame(Instance.playerIndex);
+
+
+    }
+
+    [Command]
+    public void CmdPlayerReady()
+    {
+        NetworkGameManager.Instance.TryStartGame(Instance.playerIndex);
     }
 
 }

@@ -7,9 +7,20 @@ public class NetworkGameManager : NetworkBehaviour {
 
     public bool[] isReady = new bool[2];
 
-    public SyncListBool test = new SyncListBool() { false, false };
+    [ClientRpc]
+    public void RpcChangeTurn()
+    {
+        GameManager.Instance.ChangeTurn();
+    }
 
     private static NetworkGameManager singleton;
+
+    public void Awake()
+    {
+        singleton = this;
+    }
+
+    public List<PlayerInfo> connectedPlayers = new List<PlayerInfo>();
 
     public static NetworkGameManager Instance
     {
@@ -17,72 +28,28 @@ public class NetworkGameManager : NetworkBehaviour {
         {
             return singleton;
         }
-    }
 
-    public void Awake()
-    {
-        test.Add(false);
-        test.Add(false);
-        singleton = this;
-    }
-
-    [ClientRpc]
-    public void RpcChangeTurn()
-    {
-        GameManager.Instance.ChangeTurn();
-    }
-
-
-    public bool TryStartGame(int playerIndex)
-    {
-        Debug.Log(test[playerIndex]);
-
-        // Here or catch on both button? 
-        if (PlayerInfo.Instance.numPlayer == 2 && (isReady[0] && isReady[1])
-            || PlayerInfo.Instance.numPlayer == 1 && (isReady[0]))
+        set
         {
-            Debug.Log("startGameici");
-            RpcStartGame();
-
-            // Ne pas utiliser
-            return true;
+            singleton = value;
         }
-        return false;
     }
 
-    [Command]
-    public void CmdTryStartGame(int playerIndex)
+    public void TryStartGame(int playerIndex)
     {
         isReady[playerIndex] = true;
 
+        Debug.Log(PlayerInfo.Instance.numPlayer);
+        Debug.Log(connectedPlayers.Count);
+
         // Here or catch on both button? 
         if (PlayerInfo.Instance.numPlayer == 2 && (isReady[0] && isReady[1])
             || PlayerInfo.Instance.numPlayer == 1 && (isReady[0]))
         {
-            Debug.Log("startGameici");
+            // Propagate
             RpcStartGame();
-
         }
     }
-
-
-    public override void OnStartLocalPlayer()
-    {
-        if(hasAuthority)
-        {
-            singleton = this;
-        }
-
-
-    }
-
-    public void Update()
-    {
-        if (!isServer)
-            return;
-
-    }
-
 
     [ClientRpc]
     public void RpcStartGame()

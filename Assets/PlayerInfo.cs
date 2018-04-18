@@ -69,6 +69,9 @@ public class PlayerInfo : NetworkBehaviour {
     // After enable ? 
     public override void OnStartLocalPlayer()
     {
+        if (isServer)
+            RegisterPlayerInfo();
+
         if (!hasAuthority)
             return;
 
@@ -93,18 +96,19 @@ public class PlayerInfo : NetworkBehaviour {
         if (!hasAuthority)
             return;
 
-        NetworkGameManager.Instance.isReady[playerIndex] = true;
-        CmdPlayerReady();
-
-        NetworkGameManager.Instance.CmdTryStartGame(Instance.playerIndex);
-
-
+        CmdPlayerReady(Instance.playerIndex);
     }
 
     [Command]
-    public void CmdPlayerReady()
+    public void CmdPlayerReady(int playerIndex)
     {
-        NetworkGameManager.Instance.TryStartGame(Instance.playerIndex);
+        Debug.Log("onserver");
+        NetworkGameManager.Instance.TryStartGame(playerIndex);
     }
 
+    public void RegisterPlayerInfo()
+    {
+        NetworkGameManager.Instance.connectedPlayers.Add(this);
+        Debug.Log(NetworkGameManager.Instance.connectedPlayers.Count);
+    }
 }

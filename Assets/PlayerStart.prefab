@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4856332230460966}
   - component: {fileID: 114210468144428270}
   - component: {fileID: 114266290007566966}
+  - component: {fileID: 114944251360254364}
   m_Layer: 0
   m_Name: PlayerStart
   m_TagString: Untagged
@@ -89,3 +90,17 @@ MonoBehaviour:
   playerIndex: -1
   numPlayer: 0
   readyToBegin: 0
+--- !u!114 &114944251360254364
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1517530547142604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8675ada4e34b611439e7fbdd157036db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  possessedCharacters: []
+  myPI: {fileID: 0}
+  currentPossessedCharacter: 0

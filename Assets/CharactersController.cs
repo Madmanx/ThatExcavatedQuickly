@@ -12,10 +12,16 @@ public class CharactersController : NetworkBehaviour {
 
     private static CharactersController singleton;
 
-    public void Awake()
+    public override void OnStartLocalPlayer()
     {
+        if (!hasAuthority)
+            return;
+
+        // Store mine
         singleton = this;
+      
     }
+
 
     public int currentPossessedCharacter = 0;
 
@@ -34,7 +40,10 @@ public class CharactersController : NetworkBehaviour {
 
     public void Update()
     {
-        if( GameManager.currentState == GameState.Ingame)
+        if (!hasAuthority)
+            return;
+
+        if ( GameManager.currentState == GameState.Ingame)
         {
             if (GameManager.currentTurn == (EntityTurn)PlayerInfo.Instance.playerIndex)
             {
@@ -44,11 +53,13 @@ public class CharactersController : NetworkBehaviour {
                     ControlNextCharacter();
                 }
 
-                // My Controls
+                // Shot
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    ControlNextCharacter();
+                    Shoot();
                 }
+
+                // Deplacement
             }
 
         }
@@ -56,7 +67,7 @@ public class CharactersController : NetworkBehaviour {
     private void ControlNextCharacter()
     {
         currentPossessedCharacter++;
-        if (currentPossessedCharacter > possessedCharacters.Count) currentPossessedCharacter = 0;
+        if (currentPossessedCharacter >= possessedCharacters.Count) currentPossessedCharacter = 0;
     }
 
     public void Shoot()
@@ -64,22 +75,27 @@ public class CharactersController : NetworkBehaviour {
         possessedCharacters[currentPossessedCharacter].GetComponent<NetworkPawnController>().CmdDoFire();
     }
 
-    public void Init()
+
+    public void Init(int[,] pos)
     {
+        if (!hasAuthority)
+            return;
+
         for (int i = 0; i < CharactersManager.Instance.SelectedCharacters.Length; i++)
         {
-            GameObject go = Instantiate(CharactersManager.Instance.SelectedCharacters[i].networkPrefab, transform.position, Quaternion.identity) as GameObject;
+            GameObject go = Instantiate(CharactersManager.Instance.SelectedCharacters[i].networkPrefab, new Vector3(pos[i,0], 10, pos[i,1]), Quaternion.identity) as GameObject;
             possessedCharacters.Add(go);
         }
-        PlayerInfo.Instance.CmdAssignation();
+        CmdAssignation();
     }
+
 
     [Command]
     public void CmdAssignation()
     {
         for (int i = 0; i < possessedCharacters.Count; i++)
         {
-            NetworkServer.SpawnWithClientAuthority(possessedCharacters[i], PlayerInfo.Instance.gameObject);
+            NetworkServer.SpawnWithClientAuthority(possessedCharacters[i], gameObject);
         }
     }
 

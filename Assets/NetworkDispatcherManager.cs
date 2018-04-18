@@ -5,7 +5,9 @@ using UnityEngine.Networking;
 // ONLY FOR SERVER
 public class NetworkDispatcherManager : NetworkBehaviour {
 
-    public bool[] isReady = new bool[2]; // max could define by connectedPlayers.Count
+    // Sync Bool List ? -> no because network dispatcher doesn't exist on client could be placed in GameManager(not on network but could with a control before) or PlayerInfo (but i don't want to surcharge) or Something connected to PlayerInfo
+    public bool[] isPlayerReadyForStartGame = new bool[2]; // max could define by connectedPlayers.Count
+    public bool[] isPlayerReadyForSpawnCharacters = new bool[2]; // max could define by connectedPlayers.Count
 
     private static NetworkDispatcherManager singleton;
 
@@ -31,14 +33,15 @@ public class NetworkDispatcherManager : NetworkBehaviour {
         }
     }
 
+    // Here i know that 
     public void TryStartGame(int playerIndex)
     {
-        isReady[playerIndex] = true;
-        
+        isPlayerReadyForStartGame[playerIndex] = true;
+
         bool allPlayerAreReady = true;
-        for( int i = 0; i< connectedPlayers.Count; i++)
+        for (int i = 0; i < connectedPlayers.Count; i++)
         {
-            if(!isReady[i])
+            if (!isPlayerReadyForStartGame[i])
             {
                 allPlayerAreReady = false;
             }
@@ -52,7 +55,37 @@ public class NetworkDispatcherManager : NetworkBehaviour {
             int mapSeed = 0;
 
             RpcPropagateStartGame(mapSeed, currentPlayerInfo.playerIndex, otherPlayerInfo.playerName, otherPlayerInfo.playerColor);
-            RpcSpawnPlayerCharacter();
+
+
+        }
+    }
+
+    // Here i know that the world is generated
+    public void SpawnCharacters(int playerIndex)
+    {
+        isPlayerReadyForSpawnCharacters[playerIndex] = true;
+        bool allPlayerAreReady = true;
+        for (int i = 0; i < connectedPlayers.Count; i++)
+        {
+            if (!isPlayerReadyForSpawnCharacters[i])
+            {
+                allPlayerAreReady = false;
+            }
+        }
+
+        if (allPlayerAreReady)
+        {
+            // Get pos
+            int[,] pos = new int[3, 2];
+            for (int i = 0; i < 3; i++)
+            {
+                for (int j = 0; j < 2; j++)
+                {
+                    pos[i, j] = Random.Range(0, 11);
+                }
+            }
+
+            RpcSpawnPlayerCharacter(pos);
         }
     }
 
@@ -65,10 +98,10 @@ public class NetworkDispatcherManager : NetworkBehaviour {
     }
 
     [ClientRpc]
-    public void RpcSpawnPlayerCharacter()
+    public void RpcSpawnPlayerCharacter(int[,] pos)
     {
-        // Where
-        CharactersController.Instance.Init();
+
+        CharactersController.Instance.Init(pos);
     }
 
     [ClientRpc]

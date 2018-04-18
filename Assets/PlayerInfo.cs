@@ -88,22 +88,36 @@ public class PlayerInfo : NetworkBehaviour {
         if (!hasAuthority)
             return;
 
-        CmdPlayerReady(Instance.playerIndex);
+        CmdPlayerReadyForPlayer(Instance.playerIndex);
     }
 
     [Command]
-    public void CmdPlayerReady(int playerIndex)
+    public void CmdPlayerReadyForPlayer(int playerIndex)
     {
         NetworkDispatcherManager.Instance.TryStartGame(playerIndex);
+    }
+
+    public void WorldReady()
+    {
+        if (!hasAuthority)
+            return;
+
+        CmdWorldReadyForPlayer(Instance.playerIndex);
+    }
+
+    [Command]
+    public void CmdWorldReadyForPlayer(int playerIndex)
+    {
+        NetworkDispatcherManager.Instance.SpawnCharacters(playerIndex);
     }
 
     // Only if also server
     public void RegisterPlayerInfo()
     {
-        Debug.Log(isServer);
-
         if (isServer && NetworkDispatcherManager.Instance)
             NetworkDispatcherManager.Instance.connectedPlayers.Add(this);
     }
+
+
 
 }

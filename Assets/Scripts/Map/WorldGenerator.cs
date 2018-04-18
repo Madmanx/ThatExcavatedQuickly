@@ -194,6 +194,8 @@ public class WorldGenerator : MonoBehaviour {
             if(currentLayer >= 10)
             {
                 endReach = true;
+
+                PlayerInfo.Instance.WorldReady();
             }
         }
     }

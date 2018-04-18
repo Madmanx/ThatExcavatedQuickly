@@ -7,7 +7,7 @@ public class PlayerInfo : NetworkBehaviour {
     public static event PlayerInfoReady OnPlayerInfoReady;
 
     //From Lobby
-    [SyncVar(hook ="OnChangePlayerName")]
+    [SyncVar(hook = "OnChangePlayerName")]
     public string playerName = "Player 1";
 
     [SyncVar(hook = "OnChangePlayerColor")]
@@ -23,15 +23,6 @@ public class PlayerInfo : NetworkBehaviour {
     public bool readyToBegin = false;
 
     public static PlayerInfo singleton;
-
-    //public void Awake()
-    //{
-
-    //    if (hasAuthority && singleton == null)
-    //        singleton = gameObject;
-    //    else if (hasAuthority)
-    //        Destroy(gameObject);
-    //}
 
     public static PlayerInfo Instance
     {
@@ -69,12 +60,10 @@ public class PlayerInfo : NetworkBehaviour {
     // After enable ? 
     public override void OnStartLocalPlayer()
     {
-        if (isServer)
-            RegisterPlayerInfo();
-
         if (!hasAuthority)
             return;
 
+        // Store mine
         singleton = this;
 
         // Client
@@ -86,10 +75,14 @@ public class PlayerInfo : NetworkBehaviour {
 
     public void Start()
     {
-        if(hasAuthority)
+        if (isServer)
+            RegisterPlayerInfo();
+
+        if (hasAuthority)
             this.name = playerName + (isServer ? "Server" : "Client");
     }
 
+    // Will tell the server if the player is ready
     // From player to server : global state
     public void PlayerReady()
     {
@@ -102,13 +95,34 @@ public class PlayerInfo : NetworkBehaviour {
     [Command]
     public void CmdPlayerReady(int playerIndex)
     {
-        Debug.Log("onserver");
-        NetworkGameManager.Instance.TryStartGame(playerIndex);
+        NetworkDispatcherManager.Instance.TryStartGame(playerIndex);
     }
 
+    // Only if also server
     public void RegisterPlayerInfo()
     {
-        NetworkGameManager.Instance.connectedPlayers.Add(this);
-        Debug.Log(NetworkGameManager.Instance.connectedPlayers.Count);
+        if (isServer)
+            NetworkDispatcherManager.Instance.connectedPlayers.Add(this);
     }
+
+    public void CopyCharactersSelectedToPossessedCharacters()
+    {
+        CmdCopyCharactersSelectedToPossessedCharacters(CharactersManager.Instance.SelectedCharacters);
+    }
+
+
+    [Command]
+    public void CmdCopyCharactersSelectedToPossessedCharacters(CharacterData[] selectedCharacters)
+    {
+        for (int i = 0; i < selectedCharacters.Length; i++)
+        { 
+            GameObject go = Instantiate(selectedCharacters[i].networkPrefab, transform.position, Quaternion.identity) as GameObject;
+            NetworkServer.SpawnWithClientAuthority(go, connectionToClient);
+
+            // Ref to characters controller
+            GetComponent<CharactersController>().possessedCharacters.Add(go);
+        }
+     
+    }
+
 }

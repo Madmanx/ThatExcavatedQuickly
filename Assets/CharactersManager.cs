@@ -54,9 +54,6 @@ public class CharactersManager : MonoBehaviour {
         currentCharacter++;
 
         OnCharactersRefresh();
-
-
-
         return true;
     }
 

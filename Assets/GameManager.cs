@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour {
 
     public static GameState currentState = GameState.CharacterSelection;
 
-    public delegate void GameStateChange();
+    public delegate void GameStateChange(PlayerInfo otherPlayerInfo);
     public static event GameStateChange OnGameStateChange;
 
     private static GameManager singleton;
@@ -32,10 +32,10 @@ public class GameManager : MonoBehaviour {
     }
 
 
-    public void ChangeTurn()
+    public void ChangeTurn(PlayerInfo currentPlayerInfo, PlayerInfo otherPlayerInfo)
     {
-        currentTurn = (currentTurn == EntityTurn.Player1) ? EntityTurn.Player2 : EntityTurn.Player1;
-        OnGameStateChange();
+        currentTurn = (EntityTurn)currentPlayerInfo.playerIndex;
+        OnGameStateChange(otherPlayerInfo);
     }
 
     // RefForGameLoopOnly
@@ -44,13 +44,12 @@ public class GameManager : MonoBehaviour {
     public GameObject refIngame;
 
 
-    public void StartGame()
+    public void StartGame(int mapSeed, PlayerInfo currentPlayerInfo, PlayerInfo otherPlayerInfo)
     {
         refCharacterSelection.SetActive(false);
         refIngame.SetActive(true);
 
-        currentTurn = EntityTurn.Player1;
-        OnGameStateChange();
+        ChangeTurn(currentPlayerInfo, otherPlayerInfo);
 
         // ChangeGameStateFunction? 
         currentState = GameState.Ingame;

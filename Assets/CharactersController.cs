@@ -33,6 +33,11 @@ public class CharactersController : MonoBehaviour {
         }
     }
 
+    public void Start()
+    {
+        GetComponent<PlayerInfo>().CopyCharactersSelectedToPossessedCharacters();
+    }
+
     private void ControlNextCharacter()
     {
         currentPossessedCharacter++;

@@ -20,8 +20,8 @@ public class UINbCharactersLeft : MonoBehaviour {
 
     void UpdateNbCharacter() {
         if((3 - CharactersManager.Instance.currentCharacter) > 0)
-        GetComponent<Text>().text = "Choose " + (3 - CharactersManager.Instance.currentCharacter).ToString() + " characters";
+            GetComponent<Text>().text = "Choose " + (3 - CharactersManager.Instance.currentCharacter).ToString() + " characters";
         else
-        GetComponent<Text>().text = "";
+            GetComponent<Text>().text = "";
     }
 }

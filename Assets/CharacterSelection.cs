@@ -20,7 +20,6 @@ public class CharacterSelection : MonoBehaviour {
     private int nbCharacters;
 
     private GameObject[] goCharactersToSelect;
-    //public List<CharacterData> AllCharacters;
     private List<CharacterData> AllCharacters;
 
     private void LoadCharacters()

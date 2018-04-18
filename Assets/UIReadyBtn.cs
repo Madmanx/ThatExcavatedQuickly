@@ -24,6 +24,7 @@ public class UIReadyBtn : MonoBehaviour {
 
     public void ReadyFct()
     {
+        Debug.Log(PlayerInfo.Instance);
         PlayerInfo.Instance.Cmd_PlayerReady();
     }
 }

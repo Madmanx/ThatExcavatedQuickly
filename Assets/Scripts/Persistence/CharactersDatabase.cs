@@ -11,6 +11,9 @@ public class CharacterData
     public GameObject prefab;
 
     [SerializeField]
+    public GameObject networkPrefab;
+
+    [SerializeField]
     public Sprite sprite;
 }
 
@@ -39,8 +42,8 @@ public class CharactersDatabase : ScriptableObject {
         // Adding colors
         int idCharacter = 0;
         string[] strNames = { "Dweler", "Gunner" };
-        Characters.Add(new CharacterData { name = strNames[idCharacter], prefab = Resources.Load<GameObject>("DwelerCharacter") as GameObject, sprite= allSprite[8] as Sprite });
-        Characters.Add(new CharacterData { name = strNames[++idCharacter], prefab = Resources.Load<GameObject>("GunnerCharacter") as GameObject, sprite = allSprite[13] as Sprite });
+        Characters.Add(new CharacterData { name = strNames[idCharacter], networkPrefab = Resources.Load<GameObject>("NetDwelerCharacter"), prefab = Resources.Load<GameObject>("DwelerCharacter") as GameObject, sprite= allSprite[8] as Sprite });
+        Characters.Add(new CharacterData { name = strNames[++idCharacter], networkPrefab = Resources.Load<GameObject>("NetGunnerCharacter"), prefab = Resources.Load<GameObject>("GunnerCharacter") as GameObject, sprite = allSprite[13] as Sprite });
 
     }
 }

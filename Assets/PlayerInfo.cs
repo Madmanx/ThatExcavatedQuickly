@@ -6,13 +6,23 @@ public class PlayerInfo : NetworkBehaviour {
     public delegate void PlayerInfoReady();
     public static event PlayerInfoReady OnPlayerInfoReady;
 
-    string playerName = "Player 1";
-    Color playerColor = Color.red;
-    int playerIndex = -1;
-    
-    private static PlayerInfo singleton;
+    //From Lobby
+    [SyncVar(hook ="OnChangePlayerName")]
+    public string playerName = "Player 1";
 
-    private bool isReady = false;
+    [SyncVar(hook = "OnChangePlayerColor")]
+    public Color playerColor = Color.red;
+
+    [SyncVar(hook = "OnChangePlayerIndex")]
+    public int playerIndex = -1;
+
+    [SyncVar(hook = "OnChangeNumPlayer")]
+    public int numPlayer = 0;
+
+    [SyncVar(hook = "OnReadyToBegin")]
+    public bool readyToBegin = false;
+
+    private static PlayerInfo singleton;
 
     public void Awake()
     {
@@ -27,60 +37,59 @@ public class PlayerInfo : NetworkBehaviour {
         }
     }
 
-    public string PlayerName
+    public void OnChangePlayerName(string value)
     {
-        get
-        {
-            return singleton.playerName;
-        }
+        playerName = value;
     }
 
-    public Color PlayerColor
+    public void OnChangePlayerColor(Color value)
     {
-        get
-        {
-            return singleton.playerColor;
-        }
+        playerColor = value;
     }
 
-    public int PlayerIndex
+    public void OnChangePlayerIndex(int value)
     {
-        get
-        {
-            return playerIndex;
-        }
+        playerIndex = value;
+    }
+
+    public void OnChangeNumPlayer(int value)
+    {
+        numPlayer = value;
+    }
+
+    public void OnReadyToBegin(bool value)
+    {
+        readyToBegin = value;
+    }
+
+    // After enable ? 
+    public override void OnStartLocalPlayer()
+    {
+        // Client
+        if (readyToBegin)
+            OnPlayerInfoReady();
+        else
+            Debug.LogError("Didn't sync hook");
     }
 
     public void Start()
     {
-        #if UNITY_EDITOR
-        Init(Color.blue, "Remi", 0);
-#endif
+        Debug.Log("IS server :" + isServer + " Or is CLient : " + isClient + " Or has Authority :" + hasAuthority);
 
-        isReady = true;
+        if(hasAuthority)
+            this.name = playerName + (isServer ? "Server" : "Client");
     }
 
-    public void Init(Color _selectedColor, string _selectedPlayerName, int _playerIndex)
-    {
-        playerColor = _selectedColor;
-        playerName = _selectedPlayerName;
-        playerIndex = _playerIndex;
-    }
-
-    public void Update()
-    {
-        if (isReady)
-        {
-            OnPlayerInfoReady();
-            isReady = false;
-        }
-    }
+    // From player to server : global state
 
     [Command]
     public void Cmd_PlayerReady()
     {
-        GameManager.Instance.isReady[playerIndex] = true;
-    }
+        if (!hasAuthority)
+            return;
 
+        NetworkGameManager.Instance.isReady[playerIndex] = true;
+        NetworkGameManager.Instance.TryStartGame();
+    }
 
 }

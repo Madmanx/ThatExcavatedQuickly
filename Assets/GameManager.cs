@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.Networking;
+
 
 // Sync variable ? 
 public enum EntityTurn { Player1, Player2 }
@@ -7,13 +7,11 @@ public enum EntityTurn { Player1, Player2 }
 // My Turn
 public enum GameState { CharacterSelection, Ingame, Win, Lose }
 
-public class GameManager : NetworkBehaviour {
+public class GameManager : MonoBehaviour {
 
     public static EntityTurn currentTurn;
 
     public static GameState currentState = GameState.CharacterSelection;
-
-    public bool[] isReady = new bool[2];
 
     public delegate void GameStateChange();
     public static event GameStateChange OnGameStateChange;
@@ -33,8 +31,9 @@ public class GameManager : NetworkBehaviour {
         singleton = this;
     }
 
-    [ClientRpc]
-    public void RpcChangeTurn() { 
+
+    public void ChangeTurn()
+    {
         currentTurn = (currentTurn == EntityTurn.Player1) ? EntityTurn.Player2 : EntityTurn.Player1;
         OnGameStateChange();
     }
@@ -44,29 +43,8 @@ public class GameManager : NetworkBehaviour {
     public GameObject refCharacterSelection;
     public GameObject refIngame;
 
-    public void Update()
-    {
-        if (!isServer)
-            return;
 
-        if (isReady[0] && isReady[1])
-        {
-            RpcStartGame();
-        }
-
-    }
-
-    //public void StartGame()
-    //{
-    //    if(isReady[0] && isReady[1])
-    //    {
-    //        RpcStartGame();
-    //    }
-     
-    //}
-
-    [ClientRpc]
-    public void RpcStartGame()
+    public void StartGame()
     {
         refCharacterSelection.SetActive(false);
         refIngame.SetActive(true);

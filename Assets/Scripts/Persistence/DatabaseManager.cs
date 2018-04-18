@@ -18,6 +18,7 @@ public class DatabaseManager : MonoBehaviour {
     {
         get
         {
+            if(!charactersDb) charactersDb = Resources.Load<CharactersDatabase>("Data") as CharactersDatabase;
             return charactersDb;
         }
     }
@@ -27,10 +28,5 @@ public class DatabaseManager : MonoBehaviour {
     public void Awake()
     {
         singleton = this;
-    }
-
-    // Use this for initialization
-    void Start () {
-        charactersDb = Resources.Load<CharactersDatabase>("Data") as CharactersDatabase;
     }
 }

@@ -14,7 +14,11 @@ MonoBehaviour:
   characters:
   - name: Dweler
     prefab: {fileID: 1036445469395682, guid: 82a264f5f3b3cd04f869767a9b60ffc6, type: 2}
+    networkPrefab: {fileID: 1036445469395682, guid: 66c86111229aa9b4da31377f76a75f13,
+      type: 2}
     sprite: {fileID: 21300016, guid: af61a5adbac8efe469a835ba18f7aa82, type: 3}
   - name: Gunner
     prefab: {fileID: 1036445469395682, guid: f3c8bd52da7315e46add6b9080b8409f, type: 2}
+    networkPrefab: {fileID: 1036445469395682, guid: 921cb633c845dd74095cd1fb7b053f8f,
+      type: 2}
     sprite: {fileID: 21300026, guid: af61a5adbac8efe469a835ba18f7aa82, type: 3}

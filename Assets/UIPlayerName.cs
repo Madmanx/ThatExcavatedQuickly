@@ -17,7 +17,7 @@ public class UIPlayerName : MonoBehaviour {
 
     private void UpdatePlayerName()
     {
-        GetComponent<Text>().text = PlayerInfo.Instance.PlayerName;
-        GetComponent<Text>().color = PlayerInfo.Instance.PlayerColor;
+        GetComponent<Text>().text = PlayerInfo.Instance.playerName + " P" +PlayerInfo.Instance.playerIndex;
+        GetComponent<Text>().color = PlayerInfo.Instance.playerColor;
     }
 }

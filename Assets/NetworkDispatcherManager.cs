@@ -75,17 +75,7 @@ public class NetworkDispatcherManager : NetworkBehaviour {
 
         if (allPlayerAreReady)
         {
-            // Get pos
-            int[,] pos = new int[3, 2];
-            for (int i = 0; i < 3; i++)
-            {
-                for (int j = 0; j < 2; j++)
-                {
-                    pos[i, j] = Random.Range(0, 11);
-                }
-            }
-
-            RpcSpawnPlayerCharacter(pos);
+            RpcPropagateCharactersSpawn(playerIndex);
         }
     }
 
@@ -98,8 +88,27 @@ public class NetworkDispatcherManager : NetworkBehaviour {
     }
 
     [ClientRpc]
-    public void RpcSpawnPlayerCharacter(int[,] pos)
+    public void RpcPropagateCharactersSpawn(int playerIndex)
     {
+
+        // Get pos
+        int[,] pos = new int[3, 2];
+        for (int i = 0; i < 3; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                int coord = Random.Range(0, 11);
+                if (coord < 10)
+                {
+                    coord += playerIndex;
+                }
+                else
+                {
+                    coord -= playerIndex;
+                }
+                pos[i, j] = coord;
+            }
+        }
 
         CharactersController.Instance.Init(pos);
     }

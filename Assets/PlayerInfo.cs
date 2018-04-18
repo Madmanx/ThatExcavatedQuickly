@@ -107,16 +107,25 @@ public class PlayerInfo : NetworkBehaviour {
 
     public void CopyCharactersSelectedToPossessedCharacters()
     {
-        CmdCopyCharactersSelectedToPossessedCharacters(CharactersManager.Instance.SelectedCharacters);
+
+        int[] ids = new int[CharactersManager.Instance.SelectedCharacters.Length];
+        for(int i = 0; i < ids.Length; i++)
+        {
+            ids[i] = DatabaseManager.Instance.CharactersDb.GetIdFromCharacterData(CharactersManager.Instance.SelectedCharacters[i]);
+        }
+
+        CmdCopyCharactersSelectedToPossessedCharacters(ids);
     }
 
 
     [Command]
-    public void CmdCopyCharactersSelectedToPossessedCharacters(CharacterData[] selectedCharacters)
+    public void CmdCopyCharactersSelectedToPossessedCharacters(int[] selectedCharacters)
     {
         for (int i = 0; i < selectedCharacters.Length; i++)
-        { 
-            GameObject go = Instantiate(selectedCharacters[i].networkPrefab, transform.position, Quaternion.identity) as GameObject;
+        {
+            CharacterData cd = DatabaseManager.Instance.CharactersDb.GetCharacterDataFromId(selectedCharacters[i]);
+
+            GameObject go = Instantiate(cd.networkPrefab, transform.position, Quaternion.identity) as GameObject;
             NetworkServer.SpawnWithClientAuthority(go, connectionToClient);
 
             // Ref to characters controller

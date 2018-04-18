@@ -14,9 +14,9 @@ public class UIEntityTurn : MonoBehaviour {
         GameManager.OnGameStateChange -= UpdateUIEntityTurn;
     }
 
-    public void UpdateUIEntityTurn(PlayerInfo currentPlayingPlayerInfo)
+    public void UpdateUIEntityTurn(string playerName, Color playerColor)
     {
-        GetComponent<Text>().text = currentPlayingPlayerInfo.playerName;
-        GetComponent<Text>().color = currentPlayingPlayerInfo.playerColor;
+        GetComponent<Text>().text = playerName;
+        GetComponent<Text>().color = playerColor;
     }
 }

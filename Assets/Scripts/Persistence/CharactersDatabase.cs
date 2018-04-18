@@ -5,6 +5,9 @@ using UnityEngine;
 public class CharacterData
 {
     [SerializeField]
+    public int id;
+
+    [SerializeField]
     public string name;
 
     [SerializeField]
@@ -42,8 +45,18 @@ public class CharactersDatabase : ScriptableObject {
         // Adding colors
         int idCharacter = 0;
         string[] strNames = { "Dweler", "Gunner" };
-        Characters.Add(new CharacterData { name = strNames[idCharacter], networkPrefab = Resources.Load<GameObject>("NetDwelerCharacter"), prefab = Resources.Load<GameObject>("DwelerCharacter") as GameObject, sprite= allSprite[8] as Sprite });
-        Characters.Add(new CharacterData { name = strNames[++idCharacter], networkPrefab = Resources.Load<GameObject>("NetGunnerCharacter"), prefab = Resources.Load<GameObject>("GunnerCharacter") as GameObject, sprite = allSprite[13] as Sprite });
+        Characters.Add(new CharacterData { id = idCharacter,  name = strNames[idCharacter], networkPrefab = Resources.Load<GameObject>("NetDwelerCharacter"), prefab = Resources.Load<GameObject>("DwelerCharacter") as GameObject, sprite= allSprite[8] as Sprite });
+        Characters.Add(new CharacterData { id = ++idCharacter, name = strNames[idCharacter], networkPrefab = Resources.Load<GameObject>("NetGunnerCharacter"), prefab = Resources.Load<GameObject>("GunnerCharacter") as GameObject, sprite = allSprite[13] as Sprite });
 
+    }
+
+    public int GetIdFromCharacterData(CharacterData _c)
+    {
+        return characters.Find(a => a == _c).id;
+    }
+
+    public CharacterData GetCharacterDataFromId(int id)
+    {
+        return characters.Find(a => a.id == id);
     }
 }

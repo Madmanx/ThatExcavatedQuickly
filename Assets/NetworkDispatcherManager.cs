@@ -47,18 +47,21 @@ public class NetworkDispatcherManager : NetworkBehaviour {
         {
             EntityTurn randPlayerTurn = (EntityTurn)Random.Range(0, connectedPlayers.Count);
             PlayerInfo currentPlayerInfo = GetPlayerInfoFromTurn(randPlayerTurn);
+            PlayerInfo otherPlayerInfo = GetOtherPlayerInfo(currentPlayerInfo);
             // Choose the seed of the map here
             int mapSeed = 0;
 
-            RpcPropagateStartGame(mapSeed, currentPlayerInfo, GetOtherPlayerInfo(currentPlayerInfo));
+            RpcPropagateStartGame(mapSeed, currentPlayerInfo.playerIndex, otherPlayerInfo.playerName, otherPlayerInfo.playerColor);
             RpcSpawnPlayerCharacter();
         }
     }
 
+    // Can't pass component through network because no serialize function
+    // RpcPropagateStartGame(int _mapSeed, PlayerInfo playerToStartWith, PlayerInfo otherPlayerInfo)
     [ClientRpc]
-    public void RpcPropagateStartGame(int _mapSeed, PlayerInfo playerToStartWith, PlayerInfo otherPlayerInfo)
+    public void RpcPropagateStartGame(int _mapSeed, int playerIndexToStartWith, string otherPlayerName, Color otherPlayerColor)
     {
-        GameManager.Instance.StartGame(_mapSeed, playerToStartWith, otherPlayerInfo);
+        GameManager.Instance.StartGame(_mapSeed, playerIndexToStartWith, otherPlayerName, otherPlayerColor);
     }
 
     [ClientRpc]
@@ -72,8 +75,9 @@ public class NetworkDispatcherManager : NetworkBehaviour {
     public void RpcPropagateChangeTurn()
     {
         PlayerInfo currentPlayerInfo = GetPlayerInfoFromTurn(GameManager.currentTurn);
+        PlayerInfo otherPlayerInfo = GetOtherPlayerInfo(currentPlayerInfo);
 
-        GameManager.Instance.ChangeTurn(currentPlayerInfo, GetOtherPlayerInfo(currentPlayerInfo));
+        GameManager.Instance.ChangeTurn(currentPlayerInfo.playerIndex, otherPlayerInfo.playerName, otherPlayerInfo.playerColor);
     }
 
     #region Utils
